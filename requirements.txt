@@ -9,7 +9,6 @@ numpy
 pandas
 scikit-learn
 transformers
-torch
 
 # tests/linter
 black
