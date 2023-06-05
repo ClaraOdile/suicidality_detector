@@ -71,3 +71,13 @@ mkdir tmp
 cd tmp
 sd_package-run
 ```
+
+### DATASET
+# dataset csv file should be located under 'raw_data/' where it is marked in .gitignore file to avoid redundant git push
+# ./raw_data/suicidality_dataset.csv
+
+
+### jupyter notebook file
+# please add your jupyter notebook file to .gitignore not to push it together to branch
+# echo 'your_jupyter_notebook_file' >> .gitignore
+
