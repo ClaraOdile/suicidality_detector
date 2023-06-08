@@ -64,29 +64,6 @@ def predict(
     ## 'response' contains dictionary of scores for: 'Supportive(4)', 'Ideation(2)', 'Behavior(1)', 'Attempt(0)', 'Indicator(3)'
 
 
-    ##The step below should probably go inside streamlit, rather than being here on the api part
-
-    # max_val = max(response)
-    # max_val_p = response[max_val]
-
-    # if max_val == 4:
-    #     return {'category' : 'Supportive', 'accuracy' : max_val_p, 'explanation' : 'description on Supportive'}
-    
-    # elif max_val == 2:
-    #     return {'max_val' : 'Ideation', 'accuracy' : max_val_p, 'explanation' : 'description on Ideation'}
-    
-    # elif max_val == 1:
-    #     return {'max_val' : 'Behavior', 'accuracy' : max_val_p, 'explanation' : 'description on Behavior'}
-    
-    # elif max_val == 0:
-    #     return {'max_val' : 'Attempt', 'accuracy' : max_val_p, 'explanation' : 'description on Attempt'}
-    
-    # elif max_val == 3:
-    #     return {'max_val' : 'Indicator', 'accuracy' : max_val_p, 'explanation' : 'description on Indicator'}
-    
-    # else:
-    #     return {'max_val' : 'error', 'accuracy' : 'error', 'explanation' : 'error'}
-    
 
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
