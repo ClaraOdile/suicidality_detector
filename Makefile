@@ -1,3 +1,4 @@
+.DEFAULT_GOAL := default
 # ----------------------------------
 #          INSTALL & TEST
 # ----------------------------------
@@ -53,3 +54,20 @@ pypi_test:
 
 pypi:
 	@twine upload dist/* -u $(PYPI_USERNAME)
+
+# ----------------------------------
+#      Model Test
+# ----------------------------------
+run_preprocess:
+	python -c 'from interface.main import preprocess; preprocess()'
+
+run_train:
+  python -c 'from interface.main import train; train()'
+
+run_pred:
+  python -c 'from interface.main import pred; pred()'
+
+run_evaluate:
+	python -c 'from taxifare.interface.main import evaluate; evaluate()'
+
+run_all: run_preprocess run_train run_pred run_evaluate

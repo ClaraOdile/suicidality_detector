@@ -1,8 +1,31 @@
+<<<<<<< HEAD
 wheel
 nbresult
 colorama
 ipdb
 ipykernel
+=======
+# packaging
+pip>=9
+setuptools>=26
+twine
+wheel>=0.29
+colorama
+
+# data science
+numpy
+pandas
+scikit-learn
+transformers
+tensorflow
+neattext
+
+# tests/linter
+black
+coverage
+flake8
+pytest
+>>>>>>> d680f1e06fa87bcf86e384e9562632aded27083f
 yapf
 matplotlib
 pygeohash
