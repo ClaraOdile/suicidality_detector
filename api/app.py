@@ -22,21 +22,22 @@ if st.button("Predict"):
 
     def classifier(max_val):
         if max_val == 4:
-            return {'category' : 'Supportive', 'probability' : max_val_p, 'explanation' : 'description on Supportive'}
-        
-        elif max_val == 2:
-            return {'max_val' : 'Ideation', 'probability' : max_val_p, 'explanation' : 'description on Ideation'}
-        
-        elif max_val == 1:
-            return {'max_val' : 'Behavior', 'probability' : max_val_p, 'explanation' : 'description on Behavior'}
-        
-        elif max_val == 0:
-            return {'max_val' : 'Attempt', 'probability' : max_val_p, 'explanation' : 'description on Attempt'}
-        
+            return {'max_val' : 'Supportive', 'probability' : max_val_p, 'explanation' : 'description on Supportive'}
         elif max_val == 3:
             return {'max_val' : 'Indicator', 'probability' : max_val_p, 'explanation' : 'description on Indicator'}
+        elif max_val == 2:
+            return {'max_val' : 'Ideation', 'probability' : max_val_p, 'explanation' : 'description on Ideation'}
+        elif max_val == 1:
+            return {'max_val' : 'Behavior', 'probability' : max_val_p, 'explanation' : 'description on Behavior'}
+        elif max_val == 0:
+            return {'max_val' : 'Attempt', 'probability' : max_val_p, 'explanation' : 'description on Attempt'}
         else:
             return {'max_val' : 'error', 'probability' : 'error', 'explanation' : 'error'}
+
+
+
+
+
 
     prediction = classifier(max_val)
     print(prediction)
