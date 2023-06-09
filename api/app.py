@@ -10,13 +10,6 @@ user_input = st.text_input("Enter Text:")
 if st.button("Predict"):
     response = predict(user_input)
 
-    ## dummy input for test ##
-    # probabilities = [0.0, 0.0, 0.0, 0.0, 0.0]
-    # probabilities = [round(random.uniform(0.01, 0.99), 2) for i in range(0,5)]
-    # labels = [0, 1, 2, 3, 4]
-    # response = {label: prob for label, prob in zip(labels, probabilities)}
-    ## dummy input for test ##
-
     max_val_p = max(response.values())
 
     for labels, probabilities in response.items():
@@ -50,31 +43,3 @@ if st.button("Predict"):
     st.markdown(f"<div style='font-size: 16px;'>{prediction['explanation']}</div>", unsafe_allow_html=True)
 
     st.markdown(f"<div style='font-size: 14px; color: gray;'>DISCLAIMER: Making wrong predictions could lead to severe consequences. This application is no replacement for professionals, but rather supports psychiatric care.</div>", unsafe_allow_html=True)
-
-    # result as the output class
-#     if max_val < 4:
-#         st.markdown(f"<h2 style='text-align: center; color: red;'>Suicidal {prediction['max_val']}</h2>", unsafe_allow_html=True)
-#     else:
-#         st.markdown(f"<h2 style='text-align: center; color: red;'>{prediction['max_val']}</h2>", unsafe_allow_html=True)
-
-#     # short interpretation of the prediction
-#     st.markdown(f"## Interpretation: ")
-#     st.markdown(f"<div style='font-size: 16px;'>{prediction['explanation']}</div>", unsafe_allow_html=True)
-
-#     # Show the scores for each class as a fancy bar chart
-#     graph_df = pd.DataFrame.from_dict(prediction, orient='index').reset_index()
-#     graph_df.columns=['Category', 'probability']
-#     fig = px.bar(graph_df, y='Category', x='probability', color='Category', orientation='v',
-#                  text='probability', title='Category probability', color_discrete_sequence=color_sequence)
-#     fig.update_layout(xaxis_title="probability", yaxis_title="Category", template='plotly_white', autosize=True)
-#     st.plotly_chart(fig)
-
-#     # Display the recommendation area, with placeholder text for now
-#     st.subheader("Recommendation:")
-#     st.markdown("<div style='font-size: 16px;'>Clara's recommendation text ... .</div>", unsafe_allow_html=True)
-
-# # Display the disclaimer
-# st.markdown("<div style='font-size: 14px; color: gray;'>DISCLAIMER: Making wrong predictions could lead to severe consequences. This application is no replacement for professionals, but rather supports psychiatric care.</div>", unsafe_allow_html=True)
-
-# if __name__ == '__main__':
-#     pass
