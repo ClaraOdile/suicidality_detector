@@ -35,7 +35,7 @@ def compile_model(model: Model, learning_rate=0.005) -> Model:
     # optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=learning_rate)
     # loss = model.hf_compute_loss
     #f1_score = tfa.metrics.F1Score(num_classes=5, average='macro')
-    # precision = tf.keras.metrics.Precision()
+    # precision = tf.keras.metrics.Precix
     recall = tf.keras.metrics.Recall()
     # accuracy = tf.keras.metrics.Accuracy()
 
@@ -50,10 +50,7 @@ def compile_model(model: Model, learning_rate=0.005) -> Model:
 def train_model(
         model: Model,
         encodings,
-        labels,
-        epochs=100,
-        batch_size=16,
-        patience=10
+        labels
     ):
     """
     Fit the model and return a tuple (fitted_model, history)
@@ -82,9 +79,9 @@ def train_model(
     history = model.fit({'input_ids': train_input_ids,
                          'attention_mask': train_attention_mask},
                         labels,
-                        epochs=1,
-                        batch_size=256,
-                        validation_split=0.1
+                        epochs=5,
+                        batch_size=128,
+                        validation_split=0.2
                     )
 
     #print(f"✅ Model trained on {len(X)} rows with min val MAE: {round(np.min(history.history['val_mae']), 2)}")

@@ -3,12 +3,7 @@ import numpy as np
 import uvicorn
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from transformers import DistilBertTokenizer, TFDistilBertForSequenceClassification
-# from transformers import TFRobertaModel, RobertaTokenizer
-import tensorflow as tf
-import tensorflow_addons as tfa
-
-# from Suicidality_Detector.ml_logic.model import load_model
+import random
 
 app = FastAPI()
 
@@ -33,30 +28,21 @@ app.add_middleware(
 def predict(
         user_text: str,  # ex) I wanna kill myself :(
     ):
+    # input = clean_data(user_text)
+    # encoded = preprocessing(input)
 
-    # inputs = pd.DataFrame(locals(), index=[0])
+    # model = load_model()
 
-    # model = ml_logic.model.Distilbert
-    # model = ml_logic.model.Roberta
-    # tokenizer = ml_logic.Preprocess.tokenizer
-    # assert model is not None
-
-    # # Tokenize the input sentence
-    # inputs = tokenizer(inputs, truncation=True, padding=True, return_tensors="tf")
-
-    # # Make the prediction
-    # logits = model(inputs.input_ids, attention_mask=inputs.attention_mask).logits
-    # probabilities = tf.nn.softmax(logits, axis=1)[0].numpy().tolist()
-
+    # predicted = model.predict([encoded['input_ids'], encoded['attention_mask']])
+    # print(predicted)
 
     #dummy data
-    probabilities = [0.9, 0.8, 0.99, 0.5, 0.1]
-
-    # Define class labels
+    ## dummy input for test ##
+    probabilities = [0.0, 0.0, 0.0, 0.0, 0.0]
+    probabilities = [round(random.uniform(0.01, 0.99), 2) for i in range(0,5)]
     labels = [0, 1, 2, 3, 4]
-
-    # Prepare the API response
     response = {label: prob for label, prob in zip(labels, probabilities)}
+    ## dummy input for test ##
 
     return response
 

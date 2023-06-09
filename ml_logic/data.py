@@ -26,10 +26,8 @@ def clean_data(X:list, stopword=False) -> pd.DataFrame:
 
 def preprocessing(X:list, model_name='roberta-base'):
     tokenizer =  DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
-
-    print("✅ tokenizing started \n")
-    X_enc = tokenizer(X, padding=True, truncation=True, return_tensors='tf')
+    encoded = tokenizer(X, padding=True, truncation=True, return_tensors='tf')
 
     print("✅ tokenizing done \n")
 
-    return X_enc
+    return encoded
