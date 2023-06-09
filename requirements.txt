@@ -4,6 +4,7 @@ setuptools>=26
 twine
 wheel>=0.29
 colorama
+ploty
 
 # data science
 numpy
@@ -11,6 +12,7 @@ pandas
 scikit-learn
 transformers
 tensorflow
+tensorflow_addons
 neattext
 
 # tests/linter
@@ -25,6 +27,8 @@ gcsfs
 google-cloud-storage
 mlflow
 s3fs
+fastapi
+uvicorn
 
 # utilities
 six>=1.14

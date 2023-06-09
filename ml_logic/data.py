@@ -2,7 +2,7 @@ import pandas as pd
 from tqdm import tqdm
 import neattext.functions as nfx
 import tensorflow as tf
-from transformers import RobertaTokenizer
+from transformers import DistilBertTokenizer
 
 def clean_data(X:list, stopword=False) -> pd.DataFrame:
     '''
@@ -25,10 +25,10 @@ def clean_data(X:list, stopword=False) -> pd.DataFrame:
 
 
 def preprocessing(X:list, model_name='roberta-base'):
-    tokenizer = RobertaTokenizer.from_pretrained(model_name)
+    tokenizer =  DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
 
     print("✅ tokenizing started \n")
-    X_enc = tokenizer(X, padding=True, truncation=True)
+    X_enc = tokenizer(X, padding=True, truncation=True, return_tensors='tf')
 
     print("✅ tokenizing done \n")
 

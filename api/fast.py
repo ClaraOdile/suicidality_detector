@@ -7,7 +7,6 @@ from transformers import DistilBertTokenizer, TFDistilBertForSequenceClassificat
 # from transformers import TFRobertaModel, RobertaTokenizer
 import tensorflow as tf
 import tensorflow_addons as tfa
-import ml_logic
 
 # from Suicidality_Detector.ml_logic.model import load_model
 
@@ -34,7 +33,7 @@ app.add_middleware(
 def predict(
         user_text: str,  # ex) I wanna kill myself :(
     ):
-    
+
     # inputs = pd.DataFrame(locals(), index=[0])
 
     # model = ml_logic.model.Distilbert
