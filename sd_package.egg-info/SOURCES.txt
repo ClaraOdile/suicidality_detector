@@ -3,7 +3,9 @@ README.md
 requirements.txt
 setup.py
 api/__init__.py
+api/app.py
 api/fast.py
+api/main.py
 interface/__init__.py
 interface/main.py
 interface/workflow.py
