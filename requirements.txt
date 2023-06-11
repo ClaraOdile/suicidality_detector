@@ -11,7 +11,6 @@ pandas
 scikit-learn
 transformers
 tensorflow
-tensorflow_addons
 neattext
 tensorflow_addons
 
@@ -27,9 +26,6 @@ gcsfs
 google-cloud-storage
 mlflow
 s3fs
-streamlit
-uvicorn
-FastAPI
 
 # utilities
 six>=1.14
