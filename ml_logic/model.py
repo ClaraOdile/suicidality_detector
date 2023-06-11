@@ -1,122 +1,60 @@
 import numpy as np
-import time
-
 from colorama import Fore, Style
-from typing import Tuple
 from params import *
 
-# Timing the TF import
-print(Fore.BLUE + "\nLoading TensorFlow..." + Style.RESET_ALL)
-start = time.perf_counter()
-
 import tensorflow as tf
-from transformers import TFRobertaForSequenceClassification, TFTrainer, TFTrainingArguments
-
+from transformers import TFDistilBertForSequenceClassification
 from keras import Model
 from keras.callbacks import EarlyStopping
 
-end = time.perf_counter()
-print(f"\n✅ TensorFlow loaded ({round(end - start, 2)}s)")
-
-def initialize_model(model_name = 'roberta-base') -> Model:
+def initialize_model(model_name):
     """
-    Initialize the Neural Network with random weights
+    Initialize the pre-trained model with random weights
     """
-    model = TFRobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=5)
+    model = TFDistilBertForSequenceClassification.from_pretrained(model_name, num_labels=5)
     print("✅ Model initialized")
 
     return model
 
-def compile_model(model: Model, learning_rate=0.005) -> Model:
+def compile_model(model: Model, learning_rate=0.005):
     """
-    Compile the Neural Network
+    Compile the pre-trained model
     """
-    optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=learning_rate)
-    loss = model.compute_loss
-    model.compile(optimizer=optimizer,
-            loss=loss,
-            metrics=['accuracy'])
+    precision = tf.keras.metrics.Precision()
+    recall = tf.keras.metrics.Recall()
 
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=learning_rate),
+              loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
+              metrics=[recall, precision])
     print("✅ Model compiled")
 
     return model
 
 def train_model(
-        model: Model,
-        train_dataset,
-        val_dataset,
-        epochs=100,
-        batch_size=16,
-        patience=10
-    ) -> Tuple[Model, dict]:
+        model,
+        encoded,
+        labels
+    ):
     """
-    Fit the model and return a tuple (fitted_model, history)
+    Fit the model and return fitted_model and history
     """
-    print(Fore.BLUE + "\nTraining model..." + Style.RESET_ALL)
+    print('✅ Training model...')
+    input_ids = encoded['input_ids']
+    attention_mask = encoded['attention_mask']
 
     es = EarlyStopping(
         monitor="val_loss",
-        patience=patience,
-        restore_best_weights=True,
-        verbose=1
+        patience=10,
+        restore_best_weights=True
     )
 
-    training_args = TFTrainingArguments(
-        output_dir=MODEL_DIR,          # output directory
-        num_train_epochs=epochs,              # total number of training epochs
-        per_device_train_batch_size=batch_size,  # batch size per device during training
-        per_device_eval_batch_size=64,   # batch size for evaluation
-        warmup_steps=500,                # number of warmup steps for learning rate scheduler
-        weight_decay=0.01,               # strength of weight decay
-        logging_dir=os.path.join(MODEL_DIR, 'logs')         # directory for storing logs
-    )
-
-    with training_args.strategy.scope():
-        trainer_model = model
-
-    trainer = TFTrainer(
-        model=trainer_model,                 # the instantiated 🤗 Transformers model to be trained
-        args=training_args,                  # training arguments, defined above
-        train_dataset=train_dataset,         # training dataset
-        eval_dataset=val_dataset             # evaluation dataset
-    )
-
-    trainer.train()
-    trainer.evaluate()
-
-    print(f"✅ Model trained on {len(X)} rows with min val MAE: {round(np.min(history.history['val_mae']), 2)}")
+    history = model.fit({'input_ids': input_ids, 'attention_mask': attention_mask},
+                    labels,
+                    epochs=100,
+                    batch_size=16,
+                    validation_split=0.2,
+                    callbacks=[es]
+                )
+    #print(f"✅ Model trained on {len(input_ids)} rows with min val MAE: {round(np.min(history.history['val_mae']), 2)}")
 
     return model, history
-
-
-def evaluate_model(
-        model: Model,
-        X: np.ndarray,
-        y: np.ndarray,
-        batch_size=64
-    ) -> Tuple[Model, dict]:
-    """
-    Evaluate trained model performance on the dataset
-    """
-
-    print(Fore.BLUE + f"\nEvaluating model on {len(X)} rows..." + Style.RESET_ALL)
-
-    if model is None:
-        print(f"\n❌ No model to evaluate")
-        return None
-
-    metrics = model.evaluate(
-        x=X,
-        y=y,
-        batch_size=batch_size,
-        verbose=0,
-        # callbacks=None,
-        return_dict=True
-    )
-
-    loss = metrics["loss"]
-    mae = metrics["mae"]
-
-    print(f"✅ Model evaluated, MAE: {round(mae, 2)}")
-
-    return metrics

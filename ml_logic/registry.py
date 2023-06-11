@@ -45,8 +45,17 @@ def load_model(stage="Production") -> keras.Model:
 
     print(Fore.BLUE + f"\nLoad latest model from disk..." + Style.RESET_ALL)
 
-    latest_model = keras.models.load_model(most_recent_model_path_on_disk)
+    #keras.models.model_from_json(os.path.join(MODEL_DIR, 'config.json'))
+    json_file = open(os.path.join(MODEL_DIR, 'config.json'))
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = keras.models.model_from_json(loaded_model_json)
+    # load weights into new model
+    loaded_model.load_weights (os.path.join(MODEL_DIR, "tf_model.h5"))
+
+    #print("Loaded model from disk")
+    #latest_model = keras.models.load_model(MODEL_DIR)
 
     print("✅ Model loaded from local disk")
 
-    return latest_model
+    return loaded_model
