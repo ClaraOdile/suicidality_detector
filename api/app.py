@@ -11,7 +11,7 @@ user_post = st.text_input("Enter Text:")
 # button uses the fast_predict function to get a prediction
 if st.button("Predict"):
     st.markdown(user_post)
-    url = 'http://127.0.0.1:8888/predict'  # uvicorn web server url
+    url = 'http://127.0.0.1:8000/predict'  # uvicorn web server url
     params= {'post': user_post}
     response = requests.get(url, params=params)
     results = response.json()[0]
