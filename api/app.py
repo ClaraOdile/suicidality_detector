@@ -1,5 +1,4 @@
 import streamlit as st
-from fast import predict
 import requests
 import json
 
@@ -10,13 +9,14 @@ user_post = st.text_input("Enter Text:")
 
 # button uses the fast_predict function to get a prediction
 if st.button("Predict"):
-    response = predict(user_post)
+    st.markdown(user_post)
+    URL = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict'
+    DATA={'user_post' : user_post}
+    response = requests.get(url=URL, data=DATA).json()
+    results = response.json()[0]
 
-    max_val_p = max(response.values())
-
-    for labels, probabilities in response.items():
-        if probabilities == max_val_p:
-            max_val = labels
+    max_val = int(results['max_val'])
+    max_val_p = float(results['max_val_p'])
 
     def classifier(max_val):
         if max_val == 4:
@@ -37,12 +37,7 @@ if st.button("Predict"):
             return {'max_val' : 'error', 'probability' : 'error', 'explanation' : 'error'}
 
     prediction = classifier(max_val)
-    print('This is the prediction')
-    print(prediction)
-    print(prediction['max_val'])
-
-    # result as the output class
-
+    
     st.markdown(f"This assessment is based on an AI analysis and cannot replace a psychiatric/psychological evaluation!")
 
     st.markdown(f"<h2 style='text-align: center; color: red;'>{prediction['max_val']}</h2>", unsafe_allow_html=True)

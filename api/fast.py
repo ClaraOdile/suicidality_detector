@@ -1,7 +1,11 @@
 import pandas as pd
 import numpy as np
+from params import *
+from pydantic import BaseModel
+import json
+from pathlib import Path
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 # from transformers import DistilBertTokenizer, TFDistilBertForSequenceClassification
 from transformers import TFRobertaModel, RobertaTokenizer
@@ -11,15 +15,18 @@ from ml_logic.registry import load_model
 
 # from Suicidality_Detector.ml_logic.model import load_model
 
+class Item(BaseModel):
+    category: str
+    proba: float
+
 app = FastAPI()
+
+tokenizer, model = load_model()
 
 @app.get('/')
 def index():
     return {'message': 'Hello, World'}
 
-@app.get('/Welcome')
-def get_name(name: str):
-    return {'Welcome To Suicidality Detector': f'{name}'}
 
 # Allowing all middleware is optional, but good practice for dev purposes
 app.add_middleware(
@@ -31,13 +38,10 @@ app.add_middleware(
 )
 
 @app.get("/preprocess")
-def preprocess(user_text):
-    inputs = str(user_text)
-
-    tokenizer, model = load_model()
+def preprocess(post):
+    inputs = str(post)
     print('model is loaded')
     assert tokenizer is not None
-
     # Tokenize the input sentence
     inputs = tokenizer(inputs, truncation=True, padding=True, return_tensors="tf")
     return inputs
@@ -45,31 +49,26 @@ def preprocess(user_text):
 
 @app.get("/predict")
 def predict(
-        user_text :str,  # ex) I wanna kill myself :(
+        post :str,  # ex) I wanna kill myself :(
     ):
-
-    tokenizer, model = load_model()
-
-    inputs = preprocess(user_text)
+    print('Prediction API Call started...')
+    print('Encoding Inputs...')
+    inputs = preprocess(post)
+    input_ids = inputs["input_ids"]
+    attention_mask = inputs["attention_mask"]
 
     # Make the prediction
-    logits = model(inputs.input_ids, attention_mask=inputs.attention_mask).logits
-    probabilities = tf.nn.softmax(logits, axis=1)[0].numpy().tolist()
-
-    # inputs_ids = inputs["input_ids"]
-    # print(inputs_ids)
-    # inputs_attention_mask = inputs["attention_mask"]
-    # print(inputs_attention_mask)
-    # predictions = model.predict([inputs_ids, inputs_attention_mask])
-    # print(predictions)
-
-    # Define class labels
-    labels = [0, 1, 2, 3, 4]
-
-    # Prepare the API response
-    response = {label: prob for label, prob in zip(labels, probabilities)}
-
-    return response
+    print('Making Prediction...')
+    predicted = model.predict([input_ids, attention_mask])
+    probabilities = predicted['logits']
+    max_val = probabilities.argmax()
+    max_val_p = probabilities.max()
+    print(f'highest possibility is {max_val_p} on category {max_val}')
+    returned = [
+        {'max_val' : max_val, 'max_val_p' : max_val_p},
+        ]
+    json_str = json.dumps(returned, indent=4, default=str)
+    return Response(content=json_str, media_type='application/json')
 
     ## 'response' contains dictionary of scores for: 'Supportive(4)', 'Ideation(2)', 'Behavior(1)', 'Attempt(0)', 'Indicator(3)'
 
