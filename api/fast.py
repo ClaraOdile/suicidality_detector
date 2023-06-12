@@ -7,6 +7,8 @@ from params import *
 from pydantic import BaseModel
 from transformers import TFDistilBertForSequenceClassification
 import json
+from pathlib import Path
+import os
 
 class Item(BaseModel):
     category: str
@@ -32,7 +34,8 @@ app.add_middleware(
 def predict(post):
     print('Prediction API Call started...')
     # this pred() function needs to be fixed
-    model = TFDistilBertForSequenceClassification.from_pretrained(MODEL_DIR)
+    model_dir = os.path.join(Path(os.getcwd()).parent.absolute(), 'models')
+    model = TFDistilBertForSequenceClassification.from_pretrained(model_dir)
 
     encoded = preprocessing([post])
     predicted = model.predict(encoded['input_ids'])
@@ -50,7 +53,3 @@ def predict(post):
     return Response(content=json_str, media_type='application/json')
 
     ## 'response' contains dictionary of scores for: 'Attempt(0)', 'Behavior(1)', 'Ideation(2)', 'Indicator(3)', 'Supportive(4)'
-
-if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8888)
-#uvicorn main:app --reload
