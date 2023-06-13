@@ -1,12 +1,9 @@
 import streamlit as st
-from fast import predict
 import requests
-import json
 import time
 
 
 #WALLPAPER
-import streamlit as st
 
 # Define the custom styles
 custom_css = """
@@ -72,7 +69,7 @@ if st.button("Analyze"):
         time.sleep(5)
 
 
-        url = 'http://127.0.0.1:8000/predict'  # uvicorn web server url
+        url = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
         params= {'post': user_post}
         response = requests.get(url, params=params)
         results = response.json()[0]
