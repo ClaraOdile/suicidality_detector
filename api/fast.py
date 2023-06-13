@@ -7,15 +7,10 @@ import tensorflow as tf
 import tensorflow_addons as tfa
 from ml_logic.registry import load_model
 from params import *
-from pydantic import BaseModel
 from transformers import TFRobertaModel, RobertaTokenizer
 import json
 from pathlib import Path
 import os
-
-class Item(BaseModel):
-    category: str
-    proba: float
 
 app = FastAPI()
 
