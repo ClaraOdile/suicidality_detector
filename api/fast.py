@@ -2,10 +2,9 @@ import uvicorn
 from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
 from ml_logic.data import preprocessing
-from ml_logic.registry import load_model
 from params import *
 from pydantic import BaseModel
-from transformers import TFDistilBertForSequenceClassification
+from transformers import TFDistilBertForSequenceClassification, TFRobertaForSequenceClassification
 import json
 from pathlib import Path
 import os
@@ -33,12 +32,17 @@ app.add_middleware(
 @app.get('/predict')
 def predict(post):
     print('Prediction API Call started...')
+
     # this pred() function needs to be fixed
-    model_dir = os.path.join(Path(os.getcwd()).parent.absolute(), 'models')
-    model = TFDistilBertForSequenceClassification.from_pretrained(model_dir)
+
+    loaded_model = TFRobertaForSequenceClassification.from_pretrained('roberta-base', num_labels=5)
+    model_dir= os.path.join(Path(os.getcwd()).parent.absolute(), 'models')
+    loaded_model.load_weights(os.path.join(model_dir, 'weights', 'weights'))
 
     encoded = preprocessing([post])
-    predicted = model.predict(encoded['input_ids'])
+    input_ids = encoded['input_ids']
+    attention_mask = encoded['attention_mask']
+    predicted = loaded_model.predict([input_ids, attention_mask])
 
     probabilities = predicted['logits']
 

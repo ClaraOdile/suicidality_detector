@@ -9,20 +9,20 @@ from tensorflow import keras
 
 from params import *
 
-def save_model(model: keras.Model = None) -> None:
-    """
-    Persist trained model locally on the hard drive at f"{MODEL_DIR/{timestamp}.h5"
-    """
+# def save_model(model: keras.Model = None) -> None:
+#     """
+#     Persist trained model locally on the hard drive at f"{MODEL_DIR/{timestamp}.h5"
+#     """
 
-    timestamp = time.strftime("%Y%m%d-%H%M%S")
+#     timestamp = time.strftime("%Y%m%d-%H%M%S")
 
-    # Save model locally
-    model_path = os.path.join(MODEL_DIR, f"{timestamp}.h5")
-    model.save(model_path)
+#     # Save model locally
+#     model_path = os.path.join(MODEL_DIR, f"{timestamp}.h5")
+#     model.save(model_path)
 
-    print("✅ Model saved locally")
+#     print("✅ Model saved locally")
 
-    return None
+#     return None
 
 
 def load_model(stage="Production") -> keras.Model:
