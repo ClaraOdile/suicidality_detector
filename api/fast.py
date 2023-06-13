@@ -1,17 +1,26 @@
 import pandas as pd
 import numpy as np
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.middleware.cors import CORSMiddleware
-# from transformers import DistilBertTokenizer, TFDistilBertForSequenceClassification
-from transformers import TFRobertaModel, RobertaTokenizer
 import tensorflow as tf
 import tensorflow_addons as tfa
 from ml_logic.registry import load_model
+from params import *
+from pydantic import BaseModel
+from transformers import TFRobertaModel, RobertaTokenizer
+import json
+from pathlib import Path
+import os
 
-# from Suicidality_Detector.ml_logic.model import load_model
+class Item(BaseModel):
+    category: str
+    proba: float
 
 app = FastAPI()
+
+tokenizer, model = load_model()
+print('model is loaded')
 
 @app.get('/')
 def index():
@@ -42,39 +51,27 @@ def preprocess(user_text):
     inputs = tokenizer(inputs, truncation=True, padding=True, return_tensors="tf")
     return inputs
 
+# http://127.0.0.1:8000/predict?post=string
+@app.get('/predict')
+def predict(post):
+    print('Prediction API Call started...')
 
-@app.get("/predict")
-def predict(
-        user_text :str,  # ex) I wanna kill myself :(
-    ):
+    inputs = preprocess(post)
+    input_ids = input["input_ids"]
+    attention_mask = input["attention_mask"]
 
-    tokenizer, model = load_model()
+    predicted = model.predict([input_ids, attention_mask])
 
-    inputs = preprocess(user_text)
+    probabilities = predicted['logits']
 
-    # Make the prediction
-    logits = model(inputs.input_ids, attention_mask=inputs.attention_mask).logits
-    probabilities = tf.nn.softmax(logits, axis=1)[0].numpy().tolist()
+    max_val = probabilities.argmax()
+    max_val_p = probabilities.max()
 
-    # inputs_ids = inputs["input_ids"]
-    # print(inputs_ids)
-    # inputs_attention_mask = inputs["attention_mask"]
-    # print(inputs_attention_mask)
-    # predictions = model.predict([inputs_ids, inputs_attention_mask])
-    # print(predictions)
+    print(f'highest possibility is {max_val_p} on category {max_val}')
+    returned = [
+        {'max_val' : max_val, 'max_val_p' : max_val_p},
+        ]
+    json_str = json.dumps(returned, indent=4, default=str)
+    return Response(content=json_str, media_type='application/json')
 
-    # Define class labels
-    labels = [0, 1, 2, 3, 4]
-
-    # Prepare the API response
-    response = {label: prob for label, prob in zip(labels, probabilities)}
-
-    return response
-
-    ## 'response' contains dictionary of scores for: 'Supportive(4)', 'Ideation(2)', 'Behavior(1)', 'Attempt(0)', 'Indicator(3)'
-
-
-
-if __name__ == '__main__':
-    uvicorn.run(app, host='127.0.0.1', port=8000)
-#uvicorn main:app --reload
+    ## 'response' contains dictionary of scores for: 'Attempt(0)', 'Behavior(1)', 'Ideation(2)', 'Indicator(3)', 'Supportive(4)'

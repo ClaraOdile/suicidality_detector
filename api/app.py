@@ -1,5 +1,4 @@
 import streamlit as st
-from fast import predict
 import requests
 import json
 
@@ -10,7 +9,7 @@ user_post = st.text_input("Enter Text:")
 
 # button uses the fast_predict function to get a prediction
 if st.button("Predict"):
-    response = predict(user_post)
+    response = requests.get(url = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict', data=user_post).json()
 
     max_val_p = max(response.values())
 
