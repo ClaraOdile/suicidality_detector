@@ -41,8 +41,8 @@ def train(encoded, labels):
             labels
             )
 
-    print("✅ train() done \n")
-    save_model(model)
+    print ("✅ train() done \n")
+    (model)
 
     return model, history
 
