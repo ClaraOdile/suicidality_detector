@@ -69,7 +69,7 @@ if st.button("Analyze"):
         time.sleep(5)
 
 
-        url = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
+        url = 'https://suicidalitydetectorfast-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
         params= {'post': user_post}
         response = requests.get(url, params=params)
         results = response.json()[0]
