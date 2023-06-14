@@ -6,17 +6,19 @@ import time
 #WALLPAPER
 
 # Define the custom styles
-custom_css = """
-<style>
+CSS = """
 body {
-background-image: url("https://images.pexels.com/photos/1266810/pexels-photo-1266810.jpeg");
-background-size: cover;
+    color: white;
 }
-</style>
+.stApp {
+    background-image: url(https://i.ibb.co/j4Pr3Qw/background.png);
+    background-size: 400px;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    background-color: #9FC5E8;
+    }
 """
-
-# Inject the custom CSS
-st.markdown(custom_css, unsafe_allow_html=True)
+st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
 st.title('Suicidality Detector')
 #WALLPAPER CODE ENDS
@@ -66,10 +68,7 @@ if st.button("Analyze"):
     #st.markdown(user_post)
     st.info('Please wait...') # This will add a message "Please wait..."
     with st.spinner('Analyzing...'):
-        time.sleep(5)
-
-
-        url = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
+        url = 'https://suicidalitydetectorfast-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
         params= {'post': user_post}
         response = requests.get(url, params=params)
         results = response.json()[0]
