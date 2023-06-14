@@ -59,7 +59,7 @@ if st.button("Analyze"):
      # This will add a message "Please wait..."
     with st.empty():
         with st.spinner('Analyzing...'):
-            time.sleep(5)
+            #time.sleep(5)
             url = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
             params= {'post': user_post}
             response = requests.get(url, params=params)
