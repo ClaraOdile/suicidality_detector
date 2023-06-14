@@ -59,13 +59,14 @@ if st.button("Analyze"):
      # This will add a message "Please wait..."
     #with st.empty():
     with st.spinner('Analyzing...'):
-        #time.sleep(3)
-        url = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
-        params= {'post': user_post}
-        response = requests.get(url, params=params)
-        results = response.json()[0]
-        max_val = int(results['max_val'])
-        max_val_p = float(results['max_val_p'])
+        time.sleep(3)
+
+    url = 'https://suicidalitydetector-vgublbx6qq-ew.a.run.app/predict'  # uvicorn web server url
+    params= {'post': user_post}
+    response = requests.get(url, params=params)
+    results = response.json()[0]
+    max_val = int(results['max_val'])
+    max_val_p = float(results['max_val_p'])
 
 
     #st.success('Analysis complete')
