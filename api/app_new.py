@@ -6,17 +6,18 @@ import time
 #WALLPAPER
 
 # Define the custom styles
-custom_css = """
-<style>
+CSS = """
 body {
-background-image: url("https://images.pexels.com/photos/1266810/pexels-photo-1266810.jpeg");
-background-size: cover;
+    color: white;
 }
-</style>
+.stApp {
+    background-image:  url(https://i.ibb.co/j4Pr3Qw/background.png);
+    background-size: 335px;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    }
 """
-
-# Inject the custom CSS
-st.markdown(custom_css, unsafe_allow_html=True)
+st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
 
 st.title('Suicidality Detector')
 #WALLPAPER CODE ENDS
