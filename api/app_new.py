@@ -13,9 +13,10 @@ body {
 }
 .stApp {
     background-image:  url(https://i.ibb.co/j4Pr3Qw/background.png);
-    background-size: 335px;
+    background-size: 400px;
     background-repeat: no-repeat;
     background-position: right bottom;
+    background-color: #9FC5E8;
     }
 """
 st.write(f'<style>{CSS}</style>', unsafe_allow_html=True)
@@ -26,7 +27,7 @@ st.markdown(f"<div style='font-size: 60px; color: White; '><strong>Suicidality D
 # color sequence
 color_sequence = ['#AFEEEE', '#48D1CC', '#40E0D0', '#00CED1', '#20B2AA']
 # text input cell for users
-user_post = st.text_input("Enter Text:")
+user_post = st.text_area("Enter Text:", height=100)
 def classifier(max_val):
     if max_val == 4:
         return {'max_val' : 'Supportive', 'probability' : max_val_p, 'explanation' : 'The author of this text shows empathy toward another person regarding suicidality and offers help or advice',
